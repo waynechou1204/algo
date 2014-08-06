@@ -5,21 +5,24 @@
 using namespace std; 
 
 int getindex(int i,int j){
-	return i*(i+1)/2+j-1;
+	return i*(i+1)/2+j;
 }
 
 int getBest(int i,int j,int* best,int *prize, int maxlevel){
-	if (best[getindex(i,j)]!=-1)
+	int index=getindex(i,j);
+
+	if (best[index]!=0)
 	{
-		return best[getindex(i,j)];
+		return best[index];
 	}
-	else if (j == maxlevel-1)
+	else if (i == maxlevel-1)
 	{
-		return prize[getindex(i,j)];
+		return prize[index];
 	}
 	else
 	{
-		return best[getindex(i,j)] = prize[getindex(i,j)] + max(best[getindex(i+1,j)],best[getindex(i+1,j+1)]);
+		best[index] = prize[index] + max(getBest(i+1,j,best,prize,maxlevel),getBest(i+1,j+1,best,prize,maxlevel));
+		return best[index];
 	}
 }
 
@@ -29,7 +32,7 @@ int main()
 	cin >> levelnb;
 
 	int prize[50500] = {0};
-	int best[50500]={-1};
+	int best[50500]={0};
 
 	for (int i = 0; i < levelnb*(levelnb+1)/2; ++i)
 	{
@@ -38,6 +41,5 @@ int main()
 
 	cout << getBest(0,0,best,prize,levelnb);
 
-	cin >> levelnb;
 	return 0;
 }

@@ -1,45 +1,67 @@
 #include <iostream>
-#include <string>
+#include <cstring>
 
 using namespace std; 
 
 
 int main(){
 	
-	int NEXT[10009]={0}; 
-	int p=1,q=0;
-
+	int NEXT[1000009]={0};
+	
 	char ori[1000009];
 	char par[10009];
 
-	//cin >> ori;
-	cout << "Enter partern"<< endl;
-	cin >> par;
+	int loopnb=0;
+	cin >> loopnb;
 
-	cout << "go!"<<endl;
-
-	int len=6;
-
-	while(q<=len){
-		if (par[p]!=par[q]){
-			q=NEXT[q];
+	for(int i=0;i<loopnb;++i){
+		cin >> par;
+		cin >> ori;
+	
+		// construct NEXT array for partern
+		int p=1,q=0;
+		int parlen=strlen(par);
+		while(p<parlen){
+			if (par[p]!=par[q]){
+				if(q==0){
+					p++;
+				}
+				else{
+					q=NEXT[q-1];
+				}
+			}
+			else{
+				q++;
+				NEXT[p]=q;
+				p++;
+			}
 		}
-		else{
-			p++;
-			q++;
-			NEXT[p]=q;
+
+		// search nb of partern in the origin string
+		int orilen=strlen(ori);
+		p=q=0;
+		int time=0;
+		while(p<orilen){
+			if(ori[p]!=par[q]){
+				if(q==0){
+					p++;
+				}
+				else{
+					q=NEXT[q-1];
+				}
+			}
+			else{
+				q++;
+				p++;
+				if(q==parlen){
+					q=NEXT[q-1];
+					time++;
+				}
+			}
 		}
+
+		cout << time << endl;
 	}
 	
-	NEXT[0]=-1;
-	
-	for (int i = 0; i < len; ++i)
-	{
-		cout << NEXT[i];
-	}
-
-	string s;
-	cout << "The end";
-	cin >> s;
 	return 0;
 }

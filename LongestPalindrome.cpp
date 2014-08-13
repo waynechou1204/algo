@@ -4,19 +4,6 @@
 
 using namespace std; 
 
-char* insertSpecialChar(char* str){
-	int len = strlen(str);
-	char* res = new char((len*2+1)*sizeof(char));
-	for (int i = 0; i < len; ++i)
-	{
-		res[2*i]='-';
-		if(i!=len+1){
-			res[2*i+1]=str[i];
-		}
-	}
-	return res;
-}
-
 int getPalindromeAtIndex(int index,int left,int right,int len,char* str){
 	if (left<0 || right==strlen(str))
 	{
@@ -27,41 +14,42 @@ int getPalindromeAtIndex(int index,int left,int right,int len,char* str){
 		return len;
 	}
 	else{
-		return getPalindromeAtIndex(index,left-1,right+1,len+1,str);
+		return getPalindromeAtIndex(index,left-1,right+1,len+2,str);
 	}
 }
 
-int getRightBord(int* f,int j){
-	return j+f[j]/2;
-}
 
 int foo(char* str){
 	
 	int f[20000]={1};
 
-	int j=1;
-
-	for (int i = 1; i < strlen(str); ++i)
+	int j=0;
+	int len=strlen(str);
+	
+	int max=0;
+	int idx=0;
+	
+	for (int i = 1; i < len; ++i)
 	{
-		int minEstimate = min(f[2*j-i],f[j]-2*(i-j));
+		int minEstimate=1;
+		if(2*j-i>=0){
+			minEstimate = min(f[2*j-i],f[j]-2*(i-j));
+		}
 		f[i] = getPalindromeAtIndex(i,i-minEstimate/2-1,i+minEstimate/2+1,minEstimate,str);
-		if (j<=getRightBord(f,i)){
+		
+		// compare right bord
+		if (j+f[j]/2 < i+f[i]/2){
 			j=i;
 		}
-	}
-
-	int max=0;
-	j=0;
-	for (int i = 0; i < strlen(str); ++i)
-	{
+		
 		if (f[i]>max)
 		{
-			j=i;
+			idx=i;
 			max=f[i];
 		}
 	}
 
-	return (f[j]-1)/2;
+	return (f[idx]-1)/2;
 }
 
 int main(){
@@ -70,17 +58,29 @@ int main(){
 	
 	cin >> loop;
 
-	char str[1000009];
+	char str[10009];
 		
 	for (int i = 0; i < loop; ++i)
 	{
 		cin >> str;
-		char* longstr = insertSpecialChar(str);
-		int len = foo(longstr);
+		
+		int len = strlen(str);
+		
+		//insert special '-'
+		char res[20000];
+		for (int i = 0; i < len; ++i)
+		{
+			res[2*i]='-';
+			res[2*i+1]=str[i];
+		}
+		res[2*len]='-';
+		res[2*len+1]='\0';
+		
+		//calculate
+		len = foo(res);
 
-		cout << foo(longstr);
+		cout << len << endl;
 	}
 
-	cin>>loop;
 	return 0;
 }

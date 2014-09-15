@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+string postOrder(string s1, string s2){
+
+	if (s1.length()==1)
+	{
+		return s1;
+	}
+	if (s1.length()==0)
+	{
+		return "";
+	}
+	
+	string root; 
+	root = s1[0]; 
+
+	string str1l;
+	string str2l;
+	string str1r;
+	string str2r;
+
+	int ind_x = s2.find(s1[0],0);
+	str1l = s1.substr(1,ind_x);
+	str1r = s1.substr(ind_x+1,s1.length()-ind_x-1);
+	
+	
+	str2l = s2.substr(0,ind_x);
+	str2r = s2.substr(ind_x+1,s1.length()-ind_x-1);
+
+	//cout << root <<" " <<str1l<<" " << str1r <<" " << str2l <<" "<< str2r <<endl;
+	string res = postOrder(str1l,str2l) + postOrder(str1r,str2r) + root;
+	
+	return res;
+}
+
+int main(){
+	
+	string pre;
+	string mid;
+	string post;
+
+	cin >> pre;
+	cin >> mid;
+
+	post = postOrder(pre,mid);
+
+	cout << post << endl;
+	
+	// delete
+	//int N;
+	//cin>>N;
+	return 0;
+}

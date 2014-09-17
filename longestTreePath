@@ -1,0 +1,93 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+class node
+{
+ public:
+ 	node(int v)
+ 	{
+ 		value=v;
+ 	}
+
+ 	~node();
+
+ 	int value;
+ 	vector<node*> sons;
+}; 
+
+//get most deep of this node, refresh best result
+int getDepth(node* rt, int &best){
+	
+	int first=0;
+	int second=0;
+	
+	int s = rt->sons.size();
+
+	if (s==0)
+	{
+		return 0;
+	}
+
+	for (int i=0; i<s; i++)
+	{
+		int d = getDepth(rt->sons[i],best);
+		
+		if (d+1>first)
+		{
+			second = first;
+			first=d+1;
+		}
+		else if (d+1>second)
+		{
+			second=d+1;
+		}		
+	}
+	if (first+second > best)
+	{
+		best = first+second;
+	}
+	return first;
+}
+
+
+int main(void){
+	
+	int n=0;
+	int l,r=0;
+
+	node* nodes[100009];
+	node* root;
+
+	cin >> n;
+
+	cin >> l >> r;
+	node* left = root = new node(l);
+	nodes[l] = left;
+	node* right = new node(r);
+	nodes[r] = right;
+	nodes[l]->sons.push_back(right);
+
+	for (int i = 2; i < n; ++i)
+	{
+		cin >> l >> r;
+
+		right = new node(r);
+		nodes[r] = right;
+		
+		nodes[l]->sons.push_back(right);
+	}
+
+	int best=0;
+
+	getDepth(root, best);
+
+	cout << best << endl;
+
+	// delete
+	int N;
+	cin>>N;
+	return 0;
+}

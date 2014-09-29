@@ -1,0 +1,98 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+
+vector<string> getAncesters(string son, map<string, string> map)
+{
+	vector<string> ans;
+	string current = son;
+
+	ans.push_back(current);
+	std::map<string, string>::iterator l_it;
+	
+	while(!current.empty()){
+		
+		l_it = map.begin();
+	   	l_it = map.find(current);
+	   	if(l_it!=map.end()) // find his father!
+	    {
+	    	current = l_it->second;
+	    	ans.push_back(current);
+	    }
+	   	else 
+	   	{
+	   		current = "";
+		}
+	}
+	
+	return ans;
+}
+
+int main(void){
+	
+	int n=0;
+	cin >> n;
+	
+	map<string, string> relation_map;
+
+	//string father[11]={"1","2","2","4","5","7","8","8","9","10","10"};
+	//string son[11]={"2","3","4","5","6","8","9","10","11","12","13"};
+
+	for (int i = 0; i < n; ++i)
+	{
+		string father;
+		string son;
+
+		cin >> father >> son;
+
+		relation_map.insert(pair<string,string>(son,father));
+	}
+	
+	int m=0;
+	cin >> m;
+
+	string p1,p2; // 2 persons
+
+	for (int i = 0; i < m; ++i)
+	{
+		cin >> p1 >> p2;
+		std::vector<string> a1 = getAncesters(p1, relation_map);
+
+		std::vector<string> a2 = getAncesters(p2, relation_map);
+
+		bool flag = false;
+
+		for (int j = 0; j < a1.size(); ++j)
+		{
+			for (int k = 0; k < a2.size(); ++k)
+			{
+				if (a2[k]==a1[j])
+				{
+					cout << a2[k] << endl;
+					flag = true;
+					break;
+				}
+			}
+			if (flag)
+			{
+				break;
+			}
+		}
+
+		if (!flag)
+		{
+			cout << -1 << endl;
+		}
+	}
+	
+	cout <<  endl;
+// delete
+	int N;
+	cin>>N;
+	return 0;
+}

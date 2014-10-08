@@ -1,0 +1,68 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+
+public class Main {
+    
+	public static int represent[] = new int[10000];
+	public static ArrayList<String> persons = new ArrayList<>();
+	
+	static int find_represent(int x){
+		if (x == represent[x]){
+			return x;
+		}
+		else{
+			represent[x] = find_represent(represent[x]);
+			return represent[x];
+		}
+	}
+	
+	static int getStrIndex(String p){
+		if (persons.contains(p)){
+			return persons.indexOf(p);
+		}
+		else{
+			persons.add(p);
+			int idx = persons.indexOf(p);
+			represent[idx] = idx;
+			return idx;
+		}
+	}
+	
+	public static void main(String[] args) {
+       
+    	Scanner in = new Scanner(System.in);
+        while(in.hasNext()) {
+        	
+        	int n = in.nextInt();
+        	
+        	for (int i = 0; i < n; ++i)
+        	{
+        		int op = in.nextInt();
+        		String p1 = in.next();
+        		String p2 = in.next();
+
+        		int p1i = getStrIndex(p1);
+        		int p2i = getStrIndex(p2);
+        			
+        		if (op==0) // add relation
+        		{
+        			represent[find_represent(p1i)] = find_represent(p2i);
+        		}
+        		else  // check relation
+        		{
+        			if(find_represent(p1i)==find_represent(p2i)){
+        				System.out.println("yes");
+        			}
+        			else{
+        				System.out.println("no");
+        			}
+        		}
+        	}
+        	
+        }
+        
+        in.close();
+    }
+}
